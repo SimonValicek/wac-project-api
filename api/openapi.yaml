@@ -1,0 +1,95 @@
+openapi: 3.1.0
+info:
+  title: Parking Reservation API
+  version: "1.0.0"
+servers:
+  - url: /api
+paths:
+  /reservations:
+    get:
+      summary: List all reservations
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Reservation"
+    post:
+      summary: Create a reservation
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ReservationInput"
+            example:
+              licensePlate: "BA123XY"
+              category: "employee"
+              datetime: "2025-06-17T10:30:00Z"
+              spotNumber: 42
+      responses:
+        "201":
+          description: Created
+  /reservations/{id}:
+    put:
+      summary: Update a reservation
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ReservationInput"
+      responses:
+        "204":
+          description: No Content
+    delete:
+      summary: Delete a reservation
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: No Content
+components:
+  schemas:
+    Reservation:
+      type: object
+      properties:
+        id:
+          type: string
+        licensePlate:
+          type: string
+        category:
+          type: string
+          enum: [employee, visitor, ambulance]
+        datetime:
+          type: string
+          format: date-time
+        spotNumber:
+          type: integer
+    ReservationInput:
+      type: object
+      required: [licensePlate, category, datetime, spotNumber]
+      properties:
+        licensePlate:
+          type: string
+        category:
+          type: string
+          enum: [employee, visitor, ambulance]
+        datetime:
+          type: string
+          format: date-time
+        spotNumber:
+          type: integer
