@@ -28,9 +28,10 @@ func (o *implReservationAPI) ReservationsGet(c *gin.Context) {
 	defer cancel()
 
 	cursor, err := database.Collection.Find(ctx, bson.M{})
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to query db"})
-		return
+   if err != nil {
+      // expose the underlying error for debugging
+      c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+       return
 	}
 	defer cursor.Close(ctx)
 
